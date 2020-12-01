@@ -1,0 +1,10 @@
+function getResponseHeader(response: AxiosResponse, responseHeader?: string): string | null {
+    if (responseHeader) {
+
+        const content = response.headers[responseHeader.toLowerCase()];
+        if (isString(content)) {
+            return content;
+        }
+    }
+    return null;
+}

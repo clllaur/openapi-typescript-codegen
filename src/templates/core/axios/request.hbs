@@ -1,0 +1,73 @@
+{{>header}}
+
+import { ApiError } from './ApiError';
+import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiResult } from './ApiResult';
+import { OpenAPI } from './OpenAPI';
+import axios, {AxiosResponse, AxiosRequestConfig} from 'axios';
+
+{{>functions/isDefined}}
+
+
+{{>functions/isString}}
+
+
+{{>functions/isStringWithValue}}
+
+
+{{>functions/isBlob}}
+
+
+{{>functions/getQueryString}}
+
+
+{{>functions/getUrl}}
+
+
+{{>functions/getFormData}}
+
+
+{{>functions/resolve}}
+
+
+{{>axios/getHeaders}}
+
+
+{{>axios/getRequestBody}}
+
+
+{{>axios/sendRequest}}
+
+
+{{>axios/getResponseHeader}}
+
+
+{{>axios/getResponseBody}}
+
+
+{{>functions/catchErrors}}
+
+
+/**
+ * Request using axios client
+ * @param options The request options from the the service
+ * @result ApiResult
+ * @throws ApiError
+ */
+export async function request(options: ApiRequestOptions): Promise<ApiResult> {
+    const url = getUrl(options);
+    const response = await sendRequest(options, url);
+    const responseBody = await getResponseBody(response);
+    const responseHeader = getResponseHeader(response, options.responseHeader);
+
+    const result: ApiResult = {
+        url,
+        ok: (response.status>=200&&response.status<=299),
+        status: response.status,
+        statusText: response.statusText,
+        body: responseHeader || responseBody,
+    };
+
+    catchErrors(options, result);
+    return result;
+}

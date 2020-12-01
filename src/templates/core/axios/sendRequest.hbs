@@ -1,0 +1,11 @@
+async function sendRequest(options: ApiRequestOptions, url: string): Promise<AxiosResponse> {
+    const request: AxiosRequestConfig = {
+        url: url,
+        method: options.method,
+        headers: await getHeaders(options),
+        data: getRequestBody(options),
+    };
+    if(OpenAPI.REQUEST_TRANSPORT && typeof(OpenAPI.REQUEST_TRANSPORT) === 'function')
+        return await OpenAPI.REQUEST_TRANSPORT(request);
+    else return await axios(request);
+}
